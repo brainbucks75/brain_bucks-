@@ -1,0 +1,141 @@
+/* الخط العام */
+body {
+    font-family: 'Cairo', sans-serif;
+    background: linear-gradient(to bottom, #e0f7fa, #80deea);
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    color: #333;
+}
+
+/* الهيدر */
+header {
+    background-color: #006064;
+    padding: 30px 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+header h1 {
+    font-size: 60px;
+    color: #ffca28;
+    margin: 0;
+    text-shadow: 2px 2px #004d40;
+}
+
+/* الصور */
+.images {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin: 40px 0;
+}
+
+.icon {
+    width: 150px;
+    height: 150px;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    transition: transform 0.3s;
+}
+
+.icon:hover {
+    transform: scale(1.2) rotate(5deg);
+}
+
+/* رسالة الترحيب */
+.welcome-message {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.info-message {
+    font-size: 18px;
+    color: #006064;
+    margin-bottom: 30px;
+}
+
+/* الفورم */
+#user-form {
+    display: inline-block;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+#user-form input[type="text"],
+#user-form input[type="email"] {
+    padding: 12px;
+    margin: 10px 0;
+    width: 300px;
+    border: 2px solid #80deea;
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+#user-form button {
+    padding: 12px 30px;
+    margin-top: 15px;
+    background-color: #ff6f00;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#user-form button:hover {
+    background-color: #ffa726;
+}
+
+/* مربع الخصوصية */
+.privacy-container {
+    margin: 15px 0;
+    font-size: 16px;
+}
+
+/* قسم إضافي مملوء */
+#extra-section {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin: 50px 20px;
+    flex-wrap: wrap;
+}
+
+.feature {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 15px;
+    width: 300px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    transition: transform 0.3s;
+}
+
+.feature:hover {
+    transform: translateY(-10px);
+}
+
+/* الفوتر */
+footer {
+    background-color: #004d40;
+    color: white;
+    padding: 15px 0;
+    font-size: 14px;
+}
+
+footer a {
+    color: #ffcc80;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+footer p {
+    margin-top: 5px;
+}
