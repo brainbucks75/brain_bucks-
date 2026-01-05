@@ -191,6 +191,81 @@ function backToMenu(){
   document.querySelector(".cats").style.display="flex";
   history.replaceState(null, '', 'question.html');
 }
+  // ===== ملف الأسئلة =====
+// افترض أن لديك ملف questions.js مثل:
+/*
+let questions = [
+  { question: "ما هي عاصمة فرنسا؟", answers: ["باريس","برلين","مدريد"], correct: 0 },
+  { question: "كم عدد كواكب المجموعة الشمسية؟", answers: ["7","8","9"], correct: 1 },
+  { question: "ما هو أكبر محيط في العالم؟", answers: ["الهادئ","الأطلسي","الهندي"], correct: 0 },
+];
+*/
+
+// ===== قراءة رقم السؤال من URL =====
+function getQuestionIndexFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const q = parseInt(params.get('q'));
+  return isNaN(q) ? 0 : q; // إذا ما فيه قيمة نبدأ من أول سؤال
+}
+
+let currentQuestion = getQuestionIndexFromURL();
+
+// ===== عرض السؤال =====
+function showQuestion(index) {
+  const q = questions[index];
+  const container = document.getElementById('game-container');
+  container.style.display = "block";
+  document.querySelector(".cats").style.display = "none";
+  document.getElementById('backGameBtn').style.display = "block";
+
+  container.innerHTML = `
+    <h2 style="margin-bottom:12px">${q.question}</h2>
+    <ul style="list-style:none;padding:0">
+      ${q.answers.map((a,i)=>`
+        <li style="margin-bottom:8px">
+          <button class="btn" style="width:100%" onclick="answerQuestion(${i})">${a}</button>
+        </li>
+      `).join('')}
+    </ul>
+  `;
+
+  // تحديث URL بدون إعادة تحميل الصفحة
+  history.replaceState(null, '', `question.html?q=${index}`);
+}
+
+// ===== الإجابة على السؤال =====
+function answerQuestion(selected) {
+  const correct = questions[currentQuestion].correct;
+  if(selected === correct) alert("✅ إجابة صحيحة!");
+  else alert("❌ إجابة خاطئة!");
+
+  currentQuestion++;
+  if(currentQuestion < questions.length) showQuestion(currentQuestion);
+  else {
+    alert("🎉 انتهت اللعبة!");
+    backToMenu();
+  }
+}
+
+// ===== العودة للقائمة الرئيسية =====
+function backToMenu(){
+  document.getElementById('game-container').style.display="none";
+  document.getElementById('backGameBtn').style.display="none";
+  document.querySelector(".cats").style.display="flex";
+  history.replaceState(null, '', 'question.html');
+}
+
+// ===== عند تحميل الصفحة =====
+if(window.location.search.includes('q')) showQuestion(currentQuestion);
+
+// ===== عند اختيار أيقونة من الصفحة =====
+document.querySelectorAll(".cat").forEach(cat=>{
+  cat.addEventListener("click",()=>{
+    currentQuestion = 0; // يمكنك لاحقاً فلترة الأسئلة حسب النوع
+    showQuestion(currentQuestion);
+  });
+});
+
 </script>
 
 </body>
