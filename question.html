@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>السؤال</title>
+
+  <!-- Adsense (نفس كودك لاحقًا) -->
+</head>
+<body>
+
+  <h2 id="questionText"></h2>
+
+  <div id="answers"></div>
+
+  <script type="module">
+    import { questions } from './questions.js';
+
+    // جلب id من الرابط
+    const params = new URLSearchParams(window.location.search);
+    const id = parseInt(params.get('id'));
+
+    // إيجاد السؤال
+    const question = questions.find(q => q.id === id);
+
+    const questionText = document.getElementById('questionText');
+    const answersDiv = document.getElementById('answers');
+
+    if (!question) {
+      questionText.innerText = "السؤال غير موجود";
+    } else {
+      questionText.innerText = question.text;
+
+      question.answers.forEach((ans, index) => {
+        const btn = document.createElement('button');
+        btn.innerText = ans;
+        btn.onclick = () => checkAnswer(index);
+        answersDiv.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(selected) {
+      if (selected === question.correct) {
+        alert("إجابة صحيحة ✅");
+      } else {
+        alert("إجابة خاطئة ❌");
+      }
+
+      // الانتقال للسؤال التالي
+      window.location.href = `question.html?id=${id + 1}`;
+    }
+  </script>
+
+</body>
+</html>
