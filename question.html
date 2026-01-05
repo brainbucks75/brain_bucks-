@@ -136,6 +136,15 @@ footer{position:fixed;left:0;right:0;bottom:0;height:var(--footer-h);background:
       <button class="btn" id="accountBtn">معلومات الحساب</button>
     </div>
   </div>
+<!-- BrainBucks-InContent -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-3462119395976615"
+     data-ad-slot="2447114563"
+     data-ad-format="auto"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
 
   <div class="cats">
     <div class="cat" data-cat="culture">ثقافة عامة</div>
@@ -149,12 +158,50 @@ footer{position:fixed;left:0;right:0;bottom:0;height:var(--footer-h);background:
     <div class="cat" data-cat="wronginfo">حدد المعلومة الخطأ</div>
     <div class="cat" data-cat="finddiff">حدد المختلف</div>
   </div>
+<div style="text-align:center; margin:20px 0;">
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-3462119395976615"
+       data-ad-slot="2447114563"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</div>
 
   <div id="ads-container"></div>
   <div id="question-box"></div>
   <div id="game-container" style="display:none;margin-top:20px;"></div>
   <button class="btn" id="backGameBtn" style="display:none;margin-top:15px;background:#c68c00;color:white;" onclick="backToMenu()">العودة</button>
 </section>
+<!-- BrainBucks-InContent -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-3462119395976615"
+     data-ad-slot="2447114563"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    <button class="btn" onclick="showPage('page-cats')">العودة للألعاب</button>
+  </div>
+</section>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="socials">
+    <a href="https://www.instagram.com/brain_bucks7/?hl=en" target="_blank">IG</a>
+    <a href="https://x.com/BrainBucks7" target="_blank">X</a>
+    <a href="mailto:brainbucks75@gmail.com">Email</a>
+  </div>
+</footer>
 
 <!-- ===== بقية المودالات، الفوتر، والسكربتات ===== -->
 <!-- تقدر تنقل باقي الكود كما هو عندك للمودالات، إدارة الحساب، نقاط، والإعلانات -->
@@ -192,6 +239,50 @@ function backToMenu(){
   document.querySelector(".cats").style.display="flex";
   history.replaceState(null, '', 'question.html');
 }
+  // النوافذ المنبثقة
+function openModal(id){document.getElementById(id).style.display="flex";}
+function closeModal(id){document.getElementById(id).style.display="none";}
+viewTerms.addEventListener("click",()=>openModal("modalTerms"));
+aboutBtn.addEventListener("click",()=>openModal("modalAbout"));
+forgotBtn.addEventListener("click",()=>openModal("modalAbout"));
+accountBtn.addEventListener("click",()=>openModal("modalAccount"));
+
+// ----------------- عداد النقاط -----------------
+let score = 0;
+function updateScoreDisplay(){
+  document.getElementById('scoreDisplay').value = score;
+  const claimBtn = document.getElementById('claimRewardBtn');
+  if(score >= 2000){
+    claimBtn.disabled = false;
+    claimBtn.style.background = "#4caf50";
+    claimBtn.style.cursor = "pointer";
+  }
+}
+function increaseScore(){
+  score++;
+  updateScoreDisplay();
+  saveProgress(); 
+}
+
+// -------// ----------------- حفظ التقدم تلقائياً -----------------
+async function saveProgress(){
+  const username = document.getElementById('accUsername').value.trim();
+  const contact = document.getElementById('accContact').value.trim();
+  if(!username||!contact) return;
+  const payload = { username, contact, score, ts:new Date().toISOString() };
+  await sendAccountData(payload);
+}
+function backToMenu(){
+gameContainer.style.display="none";
+backGameBtn.style.display="none";
+document.querySelector(".cats").style.display="flex";
+}
+// ----------------- إعدادات أولية -----------------
+updateScoreDisplay();
+window.increaseScore = increaseScore;
+
+
+
   // ===== ملف الأسئلة =====
 // افترض أن لديك ملف questions.js مثل:
 /*
@@ -201,6 +292,44 @@ let questions = [
   { question: "ما هو أكبر محيط في العالم؟", answers: ["الهادئ","الأطلسي","الهندي"], correct: 0 },
 ];
 */
+/************** المتغيرات العامة **************/
+let currentGame = '';
+let currentIndex = 0;
+let timer;
+let currentGameData = [];
+let currentModelIndex = 0;
+let lastAdGroup = -1;
+/************** بدء اللعبة **************/
+function startGame(game) {
+  currentGame = game;
+  currentIndex = 0;
+  lastAdGroup = -1;
+  currentGameData = shuffle([...games[game]]);
+
+  document.getElementById('game-container').style.display = 'block';
+  document.getElementById('backGameBtn').style.display = 'block';
+  document.querySelector('.cats').style.display = 'none';
+
+  showQuestion();
+}
+
+/************** اختيار أيقونة اللعبة **************/
+document.querySelectorAll('.cat').forEach(el => {
+  el.addEventListener('click', () => {
+    const cat = el.dataset.cat;
+
+    if (cat === 'memory') {
+      currentModelIndex = 0;
+      startMemoryGame();
+      updateHash();
+      return;
+    }
+
+    if (!games[cat]) return;
+    startGame(cat);
+  });
+});
+
 
 // ===== قراءة رقم السؤال من URL =====
 function getQuestionIndexFromURL() {
@@ -247,6 +376,253 @@ function answerQuestion(selected) {
     backToMenu();
   }
 }
+ /******** الإعلان: ثابت 5 أسئلة ********/
+  const adGroup = Math.floor(currentIndex / 5);
+  if (adGroup !== lastAdGroup) {
+    lastAdGroup = adGroup;
+
+    adsContainer.innerHTML = `
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-3462119395976615"
+           data-ad-slot="2447114563"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+    `;
+
+    try {
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (e) {}
+  }
+
+  /******** بطاقة السؤال ********/
+  const qDiv = document.createElement('div');
+  qDiv.className = 'card';
+  qDiv.style.backgroundColor = "#fef5e7";
+
+  const qTitle = document.createElement('div');
+  qTitle.textContent = qData.q;
+  qTitle.style.fontWeight = '700';
+  qTitle.style.marginBottom = '10px';
+  qDiv.appendChild(qTitle);
+
+  /******** لعبة الحروف ********/
+  if (currentGame === 'letters') {
+    const lettersDiv = document.createElement('div');
+    lettersDiv.className = 'letters-container';
+    lettersDiv.style.display = 'flex';
+    lettersDiv.style.gap = '5px';
+    lettersDiv.style.flexWrap = 'wrap';
+
+    shuffle(qData.letters.split('')).forEach(l => {
+      const lBtn = document.createElement('div');
+      lBtn.textContent = l;
+      lBtn.className = 'letter-btn';
+      lBtn.style.cssText =
+        'width:40px;height:40px;background:#d4a373;color:white;display:flex;justify-content:center;align-items:center;cursor:pointer;font-weight:bold;font-size:18px;border-radius:5px;margin:2px;';
+      lBtn.onclick = () => selectLetter(lBtn);
+      lettersDiv.appendChild(lBtn);
+    });
+
+    const answerDiv = document.createElement('div');
+    answerDiv.style.display = 'flex';
+    answerDiv.style.gap = '5px';
+    answerDiv.style.marginTop = '10px';
+
+    for (let i = 0; i < qData.answer.length; i++) {
+      const slot = document.createElement('div');
+      slot.className = 'answer-slot';
+      slot.style.cssText =
+        'width:40px;height:40px;background:#fef5e7;border:2px solid #d4a373;display:flex;justify-content:center;align-items:center;font-weight:bold;font-size:18px;border-radius:5px;';
+      answerDiv.appendChild(slot);
+    }
+
+    qDiv.appendChild(lettersDiv);
+    qDiv.appendChild(answerDiv);
+    container.appendChild(qDiv);
+ sendVirtualPageview(); 
+    return;
+  }
+
+  /******** ألعاب الاختيار ********/
+  const optsDiv = document.createElement('div');
+
+  qData.a.forEach((opt, index) => {
+    const btn = document.createElement('button');
+    btn.textContent = opt;
+    btn.style.cssText =
+      'display:block;margin:6px 0;padding:10px;width:100%;border:none;border-radius:5px;background:#d4a373;color:white;cursor:pointer;font-size:16px;';
+    btn.onclick = () => checkAnswer(index === qData.correct);
+    optsDiv.appendChild(btn);
+  });
+
+  qDiv.appendChild(optsDiv);
+  container.appendChild(qDiv);
+
+  /******** مؤقت ********/
+  if (currentGame === 'timed') {
+    let seconds = 10;
+    const countdown = document.createElement('div');
+    countdown.style.fontWeight = '700';
+    countdown.style.marginTop = '10px';
+    qDiv.appendChild(countdown);
+
+    clearInterval(timer);
+    timer = setInterval(() => {
+      countdown.textContent = `الوقت المتبقي: ${seconds} ثواني`;
+      seconds--;
+      if (seconds < 0) {
+        clearInterval(timer);
+        nextQuestion();
+      }
+    }, 1000);
+  }
+  
+  // -------- إرسال Virtual Pageview لكل سؤال --------
+  try {
+    const virtualUrl = `/question?q=${currentIndex}#${currentGame}-${currentIndex}`;
+    console.log("Virtual pageview:", virtualUrl); // تظهر في Console
+    if (typeof adsbygoogle !== "undefined") {
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    }
+  } catch(e) {
+    console.error("Error sending virtual pageview:", e);
+  }
+}
+// ----------------- دوال اللعب -----------------
+function checkAnswer(correct) {
+  const feedback = document.createElement('div');
+  feedback.style.fontWeight = '700';
+  feedback.style.fontSize = '18px';
+  feedback.style.color = correct ? 'green' : 'red';
+  feedback.textContent = correct ? '✔' : '✖';
+  document.getElementById('game-container').appendChild(feedback);
+
+  if (correct) {
+    increaseScore();
+    addCorrectPoint();
+  }
+
+  setTimeout(nextQuestion, 1000);
+}
+function sendVirtualPageview() {
+    try {
+        // تحديث الرابط في المتصفح بدون إعادة تحميل الصفحة
+        const newUrl = `/?q=${currentIndex + 1}#${currentGame}-${currentIndex + 1}`;
+        history.replaceState(null, '', newUrl);
+
+        // إرسال Virtual Pageview إلى AdSense
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-3462119395976615",
+            enable_page_level_ads: true
+        });
+
+        console.log("✅ Virtual Pageview sent for question", currentIndex + 1);
+    } catch (e) {
+        console.log("⚠️ Error sending Virtual Pageview:", e);
+    }
+}
+
+function nextQuestion() { currentIndex++; clearTimeout(timer); showQuestion(); }
+
+function selectLetter(letterDiv) {
+  const cardDiv = document.querySelector('#game-container .card');
+  const lettersDiv = cardDiv.querySelector('.letters-container');
+  const answerBox = [...cardDiv.querySelectorAll('.answer-slot')];
+  const emptySlot = answerBox.find(s => s.textContent === '');
+  if (!emptySlot) return;
+  emptySlot.textContent = letterDiv.textContent;
+  letterDiv.style.visibility = 'hidden';
+  const qData = currentGameData[currentIndex];
+  const answerStr = answerBox.map(s => s.textContent).join('');
+  if (answerStr.length === qData.answer.length) {
+    const feedback = document.createElement('div');
+    feedback.style.fontWeight = '700';
+    feedback.style.fontSize = '18px';
+    feedback.style.marginTop = '10px';
+    if (answerStr === qData.answer) {
+      feedback.style.color = 'green';
+      feedback.textContent = '✔';
+      increaseScore();
+      cardDiv.appendChild(feedback);
+      setTimeout(() => { currentIndex++; showQuestion(); }, 500);
+    } else {
+      feedback.style.color = 'red';
+      feedback.textContent = '❌';
+      cardDiv.appendChild(feedback);
+      setTimeout(() => {
+        answerBox.forEach(s => s.textContent = '');
+        lettersDiv.innerHTML = '';
+        shuffle(qData.letters.split('')).forEach(l => {
+          const lBtn = document.createElement('div');
+          lBtn.textContent = l;
+          lBtn.className = 'letter-btn';
+          lBtn.style.cssText = 'width:40px;height:40px;background:#d4a373;color:white;display:flex;justify-content:center;align-items:center;cursor:pointer;font-weight:bold;font-size:18px;border-radius:5px;margin:2px;';
+          lBtn.onclick = () => selectLetter(lBtn);
+          lettersDiv.appendChild(lBtn);
+        });
+        feedback.remove();
+      }, 1000);
+    }
+  }
+}
+
+// ----------------- لعبة الذاكرة -----------------
+function startMemoryGame() {
+  const pairs = memoryModels[currentModelIndex];
+  const container = document.getElementById('game-container');
+  container.innerHTML = '';
+  container.style.display = 'block';
+  document.getElementById('backGameBtn').style.display = 'block';
+  document.querySelector('.cats').style.display = 'none';
+
+  let cards = [];
+  pairs.forEach(p => { cards.push({ text: p[0], pairId: p[0] }); cards.push({ text: p[1], pairId: p[0] }); });
+  cards = shuffle(cards);
+
+  const grid = document.createElement('div');
+  grid.style.display = 'grid';
+  grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(100px, 1fr))';
+  grid.style.gap = '10px';
+
+  let firstCard = null, lock = false;
+
+  cards.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'memory-card';
+    card.dataset.pairId = c.pairId;
+    card.dataset.value = c.text;
+    card.style.cssText = 'width:100px; height:100px; cursor:pointer; background:#e0aa3e; display:flex; justify-content:center; align-items:center; font-weight:bold; font-size:16px; border-radius:6px; color:#fff; user-select:none;';
+    card.textContent = '';
+
+    card.addEventListener('click', () => {
+      if (lock || card.classList.contains('matched') || card.classList.contains('flipped')) return;
+      card.classList.add('flipped'); card.textContent = c.text;
+      if (!firstCard) { firstCard = card; } else {
+        if (firstCard.dataset.pairId === card.dataset.pairId) {
+          firstCard.classList.add('matched'); card.classList.add('matched'); increaseScore(); firstCard = null;
+          const allMatched = [...document.querySelectorAll('.memory-card')].every(cd => cd.classList.contains('matched'));
+          if (allMatched) {
+            const correctBtn = document.createElement('button'); correctBtn.textContent = '✔';
+            correctBtn.style.cssText = 'background-color: #28a745; color: white; font-size:24px; padding:12px 24px; border:none; border-radius:8px; margin:10px auto; display:block; cursor:pointer;';
+            container.appendChild(correctBtn);
+            correctBtn.addEventListener('click', () => {
+              correctBtn.remove();
+              currentModelIndex++;
+              if (currentModelIndex < memoryModels.length) { startMemoryGame(); }
+              else { container.innerHTML = '<h3 style="text-align:center;">🎉 أحسنت! أنهيت جميع نماذج الذاكرة</h3>'; }
+            });
+          }
+        } else { lock = true; setTimeout(() => { firstCard.textContent = ''; card.textContent = ''; firstCard.classList.remove('flipped'); card.classList.remove('flipped'); firstCard = null; lock = false; }, 1000); }
+      }
+    });
+
+    grid.appendChild(card);
+  });
+
+  container.appendChild(grid);
+}
+
 
 // ===== العودة للقائمة الرئيسية =====
 function backToMenu(){
@@ -267,7 +643,259 @@ document.querySelectorAll(".cat").forEach(cat=>{
   });
 });
 
+<div class="modal-back" id="modalAbout">
+  <div class="modal">
+    <h3>من نحن</h3>
+    <div class="modal-body">
+      نحن موقع ترفيهي تعليمي هدفنا التسلية وزيادة المعلومات  
+      <br>البريد: brainbucks75@gmail.com
+      <br>انستغرام: <a href="https://www.instagram.com/brain_bucks7/?hl=en" target="_blank">IG</a>
+      <br>X: <a href="https://x.com/BrainBucks7" target="_blank">X</a>
+    </div>
+    <div class="modal-actions">
+      <button onclick="closeModal('modalAbout')">اغلاق</button>
+    </div>
+  </div>
+</div>
+<!-- ======== مودال معلومات الحساب ======== -->
+<div class="modal-back" id="modalAccount">
+  <div class="modal">
+    <h3>معلومات الحساب - WISE</h3>
+    <div class="modal-body">
+
+      <!-- الاسم الكامل -->
+      <div class="form-row">
+        <label class="label">الاسم الكامل</label>
+        <div class="input-box box-dark">
+          <input class="field" id="accUsername" placeholder="اكتب اسمك الكامل" autocomplete="name" />
+        </div>
+      </div>
+
+      <!-- البريد الإلكتروني -->
+      <div class="form-row">
+        <label class="label">اذا كنت من داخل الأردن اكتب تفاصيل المحفظة كاملة</label>
+        <div class="input-box box-gray">
+          <input class="field" id="accContact" placeholder="من خارج الاردن اكتب ايميل صالح يمكننا التواصل معك من خلاله في حال وجود مشكله في تحويل wise" autocomplete="email" />
+        </div>
+      </div>
+
+      <!-- رقم حساب WISE -->
+      <div class="form-row">
+        <label class="label">رقم حساب للمقيمين خارج الاردن فقط  WISE  لتحويل مكافأة أو البريد المرتبط</label>
+        <div class="input-box box-dark">
+          <input class="field" id="wiseAccount" placeholder="رقم حسابك في WISE أو البريد" />
+        </div>
+      </div>
+ <p style="font-size:13px;color:#666;margin-top:8px;">
+          wise هو موقع تحويل عالمي يسمح بالتحويل عبر الدول يخضع لقوانين صارمة يمكنك البحث عنه للمزيد من الاستفسار
+        </p>
+
+      <!-- عدد الإجابات الصحيحة -->
+      <div class="form-row">
+        <label class="label">عدد الإجابات الصحيحة</label>
+        <div class="input-box box-dark">
+          <input class="field" id="scoreDisplay" readonly value="0" />
+        </div>
+      </div>
+
+      <!-- زر حفظ البيانات -->
+      <button id="saveAccountBtn">💾 حفظ البيانات</button>
+
+      <!-- طلب المكافأة -->
+      <div style="margin-top:15px;">
+        <button id="claimRewardBtn" disabled style="background:#ccc;cursor:not-allowed;">🎁 طلب المكافأة</button>
+        <p style="font-size:13px;color:#666;margin-top:8px;">
+          يمكنك طلب مكافأة بعد الحصول على 1000 نقطة جواب صحيح. و التحويل يتم عبر ايميلWISE مربوط مع حسابك البنكي 
+        </p>
+      </div>
+
+    </div>
+    <!-- زر الإغلاق -->
+    <div class="modal-actions">
+      <button onclick="closeModal('modalAccount')">اغلاق</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======== مودال طلب المكافأة ======== -->
+<div class="modal-back" id="modalReward">
+  <div class="modal">
+    <h3>طلب المكافأة</h3>
+    <div class="modal-body">
+      <div class="form-row">
+        <label>الاسم الرباعي (كما في الهوية)</label>
+        <input id="rewardName" class="field" placeholder="الاسم الرباعي" />
+      </div>
+      <div class="form-row">
+        <label>الهاتف أو البريد الإلكتروني</label>
+        <input id="rewardContact" class="field" placeholder="079xxxxxxx أو example@mail.com" />
+      </div>
+      <div class="form-row">
+        <label>أقرب ويسترن يونيون واسم الدولة</label>
+        <input id="rewardCountry" class="field" placeholder="و ويسترن يونيون الدولة" />
+      </div>
+      <div class="form-row">
+        <label>اسم المحافظة</label>
+        <input id="rewardRegion" class="field" placeholder="المحافظة" />
+      </div>
+      <button id="sendRewardBtn" class="btn">إرسال</button>
+      <p id="rewardStatus" style="margin-top:10px;font-weight:700;"></p>
+    </div>
+    <div class="modal-actions">
+      <button onclick="closeModal('modalReward')">اغلاق</button>
+    </div>
+  </div>
+</div>
+<!-- ======== إعلان أدسنس ثابت أسفل الشاشة ======== -->
+<div id="sticky-ad" style="position:fixed;bottom:0;left:0;width:100%;text-align:center;z-index:10;background:#fff;padding:3px 0;box-shadow:0 -1px 3px rgba(0,0,0,0.1);font-size:12px;pointer-events:none;">
+  <ins class="adsbygoogle" id="sticky-ins"
+       style="display:inline-block;width:320px;height:50px;pointer-events:auto;"
+       data-ad-client="ca-pub-3462119395976615"
+       data-ad-slot="2447114563"></ins>
+</div>
+
+<script>
+  // === تحديث الإعلان الثابت أسفل الشاشة كل 2 دقيقة ===
+  function refreshStickyAd(intervalMs = 120000) {
+    const stickyIns = document.getElementById('sticky-ins');
+    if (!stickyIns) return;
+
+    setInterval(() => {
+      try {
+        (adsbygoogle = window.adsbygoogle || []).push({});
+        console.log("تم تحديث الإعلان الثابت أسفل الشاشة");
+      } catch (e) {
+        console.log("خطأ أثناء تحديث الإعلان:", e);
+      }
+    }, intervalMs);
+  }
+
+  // نفذ التحديث بعد تحميل الصفحة
+  window.addEventListener('load', () => {
+    refreshStickyAd(120000); // كل دقيقتين
+  });
 </script>
 
+
+<!-- ======== سكربت واحد مرتب ======== -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+// ===== Firebase Configuration =====
+const firebaseConfig = {
+  apiKey: "AIzaSyDQtncbnB2Bp_j_sZe-3zOh78wdz8Q8xsE",
+  authDomain: "brain-bucks75.firebaseapp.com",
+  projectId: "brain-bucks75",
+  storageBucket: "brain-bucks75.appspot.com",
+  messagingSenderId: "514210178126",
+  appId: "1:514210178126:web:3142c227b61c23215b8f"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// ===== دوال مساعدة =====
+function isValidEmail(email){ return /\S+@\S+\.\S+/.test(email); }
+function openModal(id){document.getElementById(id).style.display="flex";}
+function closeModal(id){document.getElementById(id).style.display="none";}
+
+// ===== إدارة الحساب =====
+let score = 0;
+
+async function saveAccount(){
+  const username = document.getElementById('accUsername').value.trim();
+  const email = document.getElementById('accContact').value.trim();
+  const wise = document.getElementById('wiseAccount').value.trim();
+
+  if(!username || !email || !wise){
+    alert("املأ جميع الحقول"); 
+    return;
+  }
+  if(!isValidEmail(email)){
+    alert("البريد غير صالح"); 
+    return;
+  }
+
+  const key = `${username}_${email}_${wise}`;
+  await setDoc(doc(db,"users",key), { username, email, wise, score });
+
+  alert("✅ تم حفظ البيانات!");
+}
+
+async function loadAccount(){
+  const username = document.getElementById('accUsername').value.trim();
+  const email = document.getElementById('accContact').value.trim();
+  const wise = document.getElementById('wiseAccount').value.trim();
+
+  if(!username || !email || !wise) return;
+
+  const key = `${username}_${email}_${wise}`;
+  const docSnap = await getDoc(doc(db,"users",key));
+  if(docSnap.exists()){
+    const data = docSnap.data();
+    score = data.score || 0;
+    document.getElementById('scoreDisplay').value = score;
+  }
+}
+
+// ===== إدارة النقاط =====
+function updateScoreDisplay(){
+  document.getElementById('scoreDisplay').value = score;
+  const claimBtn = document.getElementById('claimRewardBtn');
+  claimBtn.disabled = score < 1000;
+  claimBtn.style.background = score >= 1000 ? "#4caf50" : "#ccc";
+  claimBtn.style.cursor = score >= 1000 ? "pointer" : "not-allowed";
+}
+function increaseScore(){
+  score++;                     
+  updateScoreDisplay();         
+  
+  // نضيف delay بسيط قبل الانتقال للسؤال التالي
+  setTimeout(() => {
+    currentIndex++;            
+    showQuestion();            
+    updateHash();              
+  }, 1500); //  مللي ثانية كافية لإظهار اللون
+}
+
+
+window.increaseScore = increaseScore;
+updateScoreDisplay();
+
+// ===== أحداث =====
+document.getElementById('saveAccountBtn').addEventListener('click', saveAccount);
+document.getElementById('claimRewardBtn').addEventListener('click', ()=> {
+  if(score < 1000){ alert("لم تصل بعد 1000 نقطة"); return; }
+  openModal('modalReward');
+});
+
+// إرسال طلب المكافأة
+document.getElementById('sendRewardBtn').addEventListener('click', async ()=>{
+  const payload = {
+    name: document.getElementById('rewardName').value.trim(),
+    contact: document.getElementById('rewardContact').value.trim(),
+    country: document.getElementById('rewardCountry').value.trim(),
+    region: document.getElementById('rewardRegion').value.trim(),
+    score
+  };
+  await setDoc(doc(db,"rewards",payload.contact),payload);
+  const rewardStatus = document.getElementById('rewardStatus');
+  rewardStatus.style.color = "green";
+  rewardStatus.textContent = "✅ تم إرسال طلب المكافأة";
+});
+// عند تحميل الصفحة، نقرأ النقاط المخزنة
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem('savedScore');
+  if(saved) score = parseInt(saved);
+  updateScoreDisplay();
+});
+
+// ===== إعلان أدسنس ثابت =====
+function refreshStickyAd(){(adsbygoogle=window.adsbygoogle||[]).push({});}
+refreshStickyAd();
+setInterval(refreshStickyAd,120000);
+
+  </script>
 </body>
 </html>
+
