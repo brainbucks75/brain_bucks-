@@ -1,69 +1,197 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>السؤال</title>
-<link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BRAIN BUCKS - الألعاب الثقافية والتحديات الذهنية</title>
+<meta name="description" content="استمتع بالأسئلة الثقافية والتحديات الذهنية مع BRAIN BUCKS. العب وتعلم واختبر معلوماتك بطريقة ممتعة.">
+<link rel="icon" href="favicon.ico" type="image/x-icon">
 
-  <!-- Adsense (نفس كودك لاحقًا) -->
+<style>
+/* ======= ستايلات أساسية ======= */
+body { font-family: Arial,sans-serif; font-size:16px; line-height:1.6; margin:0; padding:0; background:#fff; color:#000;}
+img {max-width:100%; height:auto;}
+table, ul, ol {width:100%; overflow-x:auto;}
+@media(max-width:768px){body{font-size:14px;} h1{font-size:22px;} h2{font-size:20px;} h3{font-size:18px;} .content{padding:10px;}}
+:root{
+--bg:#ffffff; --dark-box:#222; --gray-box:#bfbfbf; --white:#ffffff; --accent-red:#c71b1b; --accent-black:#000000;
+--muted-text:#666; --yellow-dark:#e6b800; --green:#28a745; --red:#d32f2f; --container-w:920px; --footer-h:80px;
+--logo-font-size:42px; --logo-top:28px; font-family:"Segoe UI",Tahoma,"Noto Naskh Arabic","Almarai",sans-serif;}
+*{box-sizing:border-box}
+html,body{height:100%; margin:0;}
+.wrap{max-width:var(--container-w);margin:18px auto 90px;padding:18px;}
+header{position:fixed;top:var(--logo-top);left:0;right:0;display:flex;justify-content:center;z-index:50;pointer-events:none;}
+.logo{pointer-events:auto; display:flex; align-items:center; gap:10px; background:transparent; padding:6px 12px; border-radius:12px;}
+.logo .chars{font-weight:800;font-size:var(--logo-font-size);letter-spacing:2px;direction:ltr;}
+.logo .chars span{display:inline-block;padding:0 2px;}
+.page{display:none;padding-top:110px;}
+.active{display:block}
+.card{background:transparent;padding:18px;max-width:720px;margin:20px auto;border-radius:12px;}
+.form-row{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.label{font-size:16px;color:var(--muted-text)}
+.input-box{display:flex;align-items:center;padding:10px;border-radius:8px;gap:10px;}
+.box-dark{background:var(--dark-box);color:var(--white)}
+.box-gray{background:var(--gray-box);color:var(--accent-black)}
+.box-dark .field,.box-gray .field{background:var(--white);border:none;padding:10px;border-radius:6px;flex:1;font-size:16px}
+.box-dark .field::placeholder,.box-gray .field::placeholder{color:#999}
+.field{min-height:40px}
+.note{font-size:14px;color:var(--muted-text);margin-bottom:10px}
+.agree-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.agree-row input[type="checkbox"]{transform:scale(1.2)}
+.btn{display:inline-block;padding:12px 20px;border-radius:12px;border:none;cursor:pointer;font-weight:700;font-size:16px;}
+.btn.disabled{opacity:0.5;cursor:default}
+.btn-start{background:var(--dark-box);color:var(--white);}
+.modal-back{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;z-index:200;}
+.modal{background:var(--white);width:90%;max-width:920px;border-radius:12px;padding:18px;max-height:80vh;overflow:auto;}
+.modal h3{margin-top:0;font-size:20px;}
+.modal .modal-body{white-space:pre-wrap;font-size:15px;color:#111;line-height:1.6}
+.modal .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
+.cats{max-width:720px;margin:20px auto;display:flex;flex-direction:column;gap:14px;padding:8px;}
+.cat{background:var(--dark-box);color:var(--white);padding:20px 18px;border-radius:12px;font-weight:700;cursor:pointer;text-align:center;transition:0.3s;font-size:18px;}
+.cat:hover{transform:scale(1.03);background:#333;}
+.tagline{margin-top:8px;text-align:center;font-weight:700;color:var(--muted-text);font-size:16px;}
+footer{position:fixed;left:0;right:0;bottom:0;height:var(--footer-h);background:transparent;display:flex;align-items:center;justify-content:center;gap:18px;z-index:60;}
+.socials{display:flex;gap:12px;align-items:center}
+.socials a{display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:10px;background:#f2f2f2;text-decoration:none;color:inherit;font-weight:700}
+.btn-new{background:#4caf50;color:white;margin:0 6px;}
+.header-buttons{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.header-buttons-left, .header-buttons-right{display:flex;gap:6px;align-items:center;}
+@media(max-width:520px){.logo .chars{font-size:32px}.wrap{padding:6px}}
+</style>
 </head>
 <body>
 
- <div class="card" style="background-color:#fef5e7; padding:18px; border-radius:12px; max-width:720px; margin:20px auto;">
-  <div id="questionText" style="font-weight:700; margin-bottom:10px;"></div>
-  <div id="answers" class="opts"></div>
+<header id="mainHeader">
+  <div class="logo" aria-hidden="false">
+    <div class="chars" id="logoText" role="img" aria-label="B R A I N   B U C K S"></div>
+  </div>
+</header>
+
+<!-- ===== صفحة التسجيل ===== -->
+<div class="wrap">
+<section id="page-home" class="page active">
+  <div class="card" role="form">
+    <h1 style="margin:0 0 8px 0">انضم إلى BRAIN BUCKS</h1>
+  </div>
+  <p class="note">استمتع بالأسئلة الثقافية والتحديات الذهنية بطريقة ممتعة.</p>
+
+  <div class="form-row">
+    <label class="label">اسم المستخدم (مطابق للهوية)</label>
+    <div class="input-box box-dark">
+      <input class="field" id="username" placeholder="اكتب اسمك الحقيقي أو اسم مستعار">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <label class="label">البريد الإلكتروني</label>
+    <div class="input-box box-gray">
+      <input class="field" id="email" placeholder="example@mail.com">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <label class="label">الدولة</label>
+    <div class="input-box box-dark">
+      <input class="field" id="country" placeholder="اكتب اسم دولتك">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <label class="label">المحافظة / المقاطعة</label>
+    <div class="input-box box-dark">
+      <input class="field" id="region" placeholder="اكتب المحافظة أو المقاطعة">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="agree-row">
+      <input type="checkbox" id="agree">
+      <label for="agree">أوافق على شروط الاستخدام وسياسة الخصوصية</label>
+      <button class="btn" id="viewTerms" style="background:transparent;border:1px solid #ddd;padding:6px 10px;border-radius:8px">عرض الشروط</button>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;align-items:center;margin-top:10px">
+    <button id="startBtn" class="btn btn-start disabled" disabled>ابدأ اللعب</button>
+    <div id="formFeedback" style="color:var(--red);font-weight:700"></div>
+  </div>
+
+  <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap">
+    <button class="btn" id="aboutBtn">من نحن</button>
+    <button class="btn" id="forgotBtn">هل لديك مقترح لنا؟</button>
+  </div>
+</section>
 </div>
 
+<!-- ===== صفحة الأيقونات ===== -->
+<section id="page-cats" class="page">
+  <div class="header-buttons">
+    <div class="header-buttons-left">
+      <button class="btn btn-new" id="btnArticles">المقالات</button>
+      <button class="btn btn-new" id="btnStories">القصص</button>
+    </div>
+    <div id="readyText" style="font-size:36px;font-weight:800;">اختر نوع اللعبة</div>
+    <div class="header-buttons-right">
+      <button class="btn btn-new" id="btnIdeas">الأفكار</button>
+      <button class="btn" id="accountBtn">معلومات الحساب</button>
+    </div>
+  </div>
 
-  <script type="module">
-    import { questions } from './questions.js';
+  <div class="cats">
+    <div class="cat" data-cat="culture">ثقافة عامة</div>
+    <div class="cat" data-cat="islam">إسلاميات</div>
+    <div class="cat" data-cat="timed">تحدي الوقت</div>
+    <div class="cat" data-cat="truefalse">صح × خطأ</div>
+    <div class="cat" data-cat="letters">رتب الحروف</div>
+    <div class="cat" data-cat="whoami">من أنا</div>
+    <div class="cat" data-cat="intl">ثقافة دولية</div>
+    <div class="cat" data-cat="memory">الذاكرة</div>
+    <div class="cat" data-cat="wronginfo">حدد المعلومة الخطأ</div>
+    <div class="cat" data-cat="finddiff">حدد المختلف</div>
+  </div>
 
-    // جلب id من الرابط
-    const params = new URLSearchParams(window.location.search);
-    const id = parseInt(params.get('id'));
+  <div id="ads-container"></div>
+  <div id="question-box"></div>
+  <div id="game-container" style="display:none;margin-top:20px;"></div>
+  <button class="btn" id="backGameBtn" style="display:none;margin-top:15px;background:#c68c00;color:white;" onclick="backToMenu()">العودة</button>
+</section>
 
-    // إيجاد السؤال
-    const question = questions.find(q => q.id === id);
+<!-- ===== بقية المودالات، الفوتر، والسكربتات ===== -->
+<!-- تقدر تنقل باقي الكود كما هو عندك للمودالات، إدارة الحساب، نقاط، والإعلانات -->
 
-    const questionText = document.getElementById('questionText');
-    const answersDiv = document.getElementById('answers');
+<script>
+// ===== شعار الموقع =====
+const logoText = "BRAIN BUCKS";
+document.getElementById("logoText").innerHTML = logoText.split("").map((c,i)=>`<span style="color:${i%2===0?'#c71b1b':'#000'}">${c}</span>`).join("");
 
-    if (!question) {
-      questionText.innerText = "السؤال غير موجود";
-    } else {
-      questionText.innerText = question.text;
+// ===== تفعيل زر البدء =====
+const agree = document.getElementById('agree');
+const startBtn = document.getElementById('startBtn');
+agree.addEventListener("change",()=>{startBtn.disabled=!agree.checked;startBtn.classList.toggle("disabled",!agree.checked);});
+startBtn.addEventListener("click",()=>{ showPage('page-cats'); });
 
-      question.answers.forEach((ans, index) => {
-       const btn = document.createElement('button');
-btn.innerText = ans;
-btn.className = 'btn'; // هذا يربطه بالـ CSS الأصلي للموقع
-btn.style.display = 'block';
-btn.style.margin = '6px 0';
-btn.style.padding = '10px';
-btn.style.width = '100%';
-btn.style.border = 'none';
-btn.style.borderRadius = '5px';
-btn.style.background = '#d4a373';
-btn.style.color = 'white';
-btn.style.cursor = 'pointer';
-btn.style.fontSize = '16px';
-btn.onclick = () => checkAnswer(index);
-answersDiv.appendChild(btn);
+// ===== التنقل بين الصفحات =====
+function showPage(id){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  const header = document.getElementById("mainHeader");
+  header.style.display = (id === "page-cats") ? "none" : "flex";
+}
 
-      });
-    }
+// ===== أزرار الصفحة الرئيسية =====
+document.getElementById('btnArticles').addEventListener("click",()=>{ showPage("page-articles"); });
+document.getElementById('btnStories').addEventListener("click",()=>{ showPage("page-stories"); });
+document.getElementById('btnIdeas').addEventListener("click",()=>{ showPage("page-ideas"); });
+document.getElementById('accountBtn').addEventListener("click",()=>{ openModal('modalAccount'); });
 
-    function checkAnswer(selected) {
-      if (selected === question.correct) {
-        alert("إجابة صحيحة ✅");
-      } else {
-        alert("إجابة خاطئة ❌");
-      }
-
-      // الانتقال للسؤال التالي
-      window.location.href = `question.html?id=${id + 1}`;
-    }
-  </script>
+// ===== العودة للقائمة =====
+function backToMenu(){
+  document.getElementById('game-container').style.display="none";
+  document.getElementById('backGameBtn').style.display="none";
+  document.querySelector(".cats").style.display="flex";
+  history.replaceState(null, '', 'question.html');
+}
+</script>
 
 </body>
 </html>
