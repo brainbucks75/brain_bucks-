@@ -74,7 +74,7 @@ footer{position:fixed;left:0;right:0;bottom:0;height:var(--footer-h);background:
 </header>
 
 <div class="wrap">
-<section id="page-cats" class="page">
+<section id="page-cats" class="page active">
   <div class="header-buttons">
     <div class="header-buttons-left">
       <button class="btn btn-new" id="btnArticles">المقالات</button>
@@ -7187,7 +7187,6 @@ agree.addEventListener("change",()=>{
 startBtn.disabled = !agree.checked;
 startBtn.classList.toggle("disabled",!agree.checked);
 });
-
 
 // النوافذ المنبثقة
 function openModal(id){document.getElementById(id).style.display="flex";}
@@ -58513,6 +58512,9 @@ const pairs = memoryModels[currentModelIndex];
 
   container.appendChild(grid);
 }
+window.addEventListener("load", () => {
+  showPage("page-cats");
+});
 </script>
 
 </section>
